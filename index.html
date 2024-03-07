@@ -1,20 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AJAX Project</title>
-  <link rel="icon" href="images/favicon.ico">
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-  <header>
-  </header>
-  <main>
-  </main>
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX Project</title>
+    <link rel="icon" href="images/favicon.ico" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <header class="otaku-header">
+      <div class="row otaku-row">
+        <div class="column-full">
+          <h1 class="otaku-oasis">Otaku Oasis</h1>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <div class="row">
+        <div class="column-full landing-column">
+          <h1 class="welcome">Welcome to Otaku Oasis</h1>
+          <div>
+            <label class="landing-search-label" for="search"
+              >start your search</label
+            >
+          </div>
+          <input
+            class="landing-search"
+            type="text"
+            id="search"
+            placeholder="e.g. naruto" />
+        </div>
+      </div>
+    </main>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+  </body>
 </html>
