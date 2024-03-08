@@ -1,4 +1,5 @@
-function renderSearch(entry: Entry): HTMLLIElement {
+'use strict';
+function renderSearch(entry) {
   const $listItem = document.createElement('li');
   const $row = document.createElement('div');
   $row.setAttribute('class', 'row');
@@ -16,7 +17,6 @@ function renderSearch(entry: Entry): HTMLLIElement {
   const $moreDetails = document.createElement('a');
   $moreDetails.setAttribute('href', '#');
   $moreDetails.textContent = 'More details...';
-
   $listItem.appendChild($row);
   $row.appendChild($columnHalf1);
   $columnHalf1.appendChild($image);
@@ -24,8 +24,6 @@ function renderSearch(entry: Entry): HTMLLIElement {
   $columnHalf2.appendChild($title);
   $columnHalf2.appendChild($episodes);
   $columnHalf2.appendChild($moreDetails);
-
   return $listItem;
 }
-
 renderSearch(entry);

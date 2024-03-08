@@ -45,6 +45,9 @@ body {
 /*
 ^stylings related to landing page^
 /below is stylings related to the search results page/ */
+.results {
+  margin-left: 2.5rem;
+}
 
 .search-results {
   list-style: none;
