@@ -23,20 +23,41 @@
       </div>
     </header>
     <main class="container">
-      <div class="row">
-        <div class="column-full landing-column">
-          <h1 class="welcome">Welcome to Otaku Oasis</h1>
-          <div>
-            <label class="landing-search-label" for="search"
-              >start your search</label
-            >
+      <div data-view="landing">
+        <div class="row landing-row">
+          <div class="column-full landing-column">
+            <h1 class="welcome">Welcome to Otaku Oasis</h1>
+            <div>
+              <label class="landing-search-label" for="search"
+                >start your search</label
+              >
+            </div>
+            <input
+              class="landing-search"
+              type="text"
+              id="search"
+              placeholder="e.g. naruto" />
           </div>
-          <input
-            class="landing-search"
-            type="text"
-            id="search"
-            placeholder="e.g. naruto" />
         </div>
+      </div>
+      <div data-view="search">
+        <ul class="search-results">
+          <li>
+            <div class="column-half">
+              <h2>results for 'orange'</h2>
+            </div>
+            <div class="row">
+              <div class="column-half">
+                <img src="images/orange.jpg" alt="anime-show" />
+              </div>
+              <div class="column-half">
+                <h1>Orange</h1>
+                <h2>13 Eps</h2>
+                <p>More Details...</p>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
     </main>
     <script src="js/data.js"></script>

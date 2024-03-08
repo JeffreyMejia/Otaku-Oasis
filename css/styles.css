@@ -15,12 +15,12 @@ body {
 .welcome {
   font-family: sriracha, cursive;
   color: #683f3f;
-  width: 40%;
   display: flex;
   flex-wrap: wrap;
 }
 
 .landing-search-label {
+  margin-left: -5rem;
   color: white;
 }
 
@@ -28,6 +28,7 @@ body {
   background-color: #d7cdce;
   border-style: none;
   border-radius: 5%;
+  margin-left: -1rem;
 }
 
 .landing-column {
@@ -35,6 +36,16 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 600px;
-  background-image:;
+  height: 500px;
+  background-image: url('/images/oasis.jpg');
+  background-repeat: no-repeat;
+  border-radius: 60%;
+}
+
+/*
+^stylings related to landing page^
+/below is stylings related to the search results page/ */
+
+.search-results {
+  list-style: none;
 }

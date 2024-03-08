@@ -5,6 +5,7 @@
 .container {
   max-width: 576px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .row {
@@ -20,7 +21,11 @@
   width: 100%;
 }
 
-@media screen and(min width: 769px) {
+.welcome {
+  width: 60%;
+}
+
+@media screen and (min-width: 769px) {
   .container {
     max-width: 900px;
     margin: 0 auto;
@@ -28,5 +33,14 @@
 
   .column-half {
     width: 50%;
+    padding: 0.5rem;
+  }
+
+  .landing-column {
+    width: 80%;
+  }
+
+  .welcome {
+    width: 30%;
   }
 }
