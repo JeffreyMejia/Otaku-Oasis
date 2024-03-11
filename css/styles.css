@@ -53,8 +53,20 @@ body {
 /below is stylings related to the search results page/ */
 .results {
   margin-left: 2.5rem;
+  color: white;
 }
 
 .search-results {
   list-style: none;
+}
+
+.no-results {
+  color: white;
+  margin-left: 2.5rem;
+}
+
+.title,
+.episodes,
+.details {
+  color: white;
 }

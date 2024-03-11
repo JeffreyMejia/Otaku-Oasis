@@ -1,6 +1,6 @@
 /* exported data */
 // interface Search {
 //   title: string;
-//   photoURL: string;
+//   imageURL: string;
 //   episodes: string;
 // }
