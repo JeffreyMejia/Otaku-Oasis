@@ -1,3 +1,7 @@
 'use strict';
-const entry = { title: 'string', photoURL: 'string', episodes: 'string' };
-renderSearch(entry);
+/* exported data */
+// interface Search {
+//   title: string;
+//   photoURL: string;
+//   episodes: string;
+// }

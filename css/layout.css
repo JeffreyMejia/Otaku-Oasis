@@ -44,3 +44,16 @@
     width: 30%;
   }
 }
+
+.otaku-row {
+  align-items: center;
+}
+
+.align-right {
+  display: flex;
+  justify-content: center;
+}
+
+.landing-row {
+  justify-content: center;
+}

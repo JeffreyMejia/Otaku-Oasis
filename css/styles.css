@@ -12,6 +12,12 @@ body {
   text-shadow: black;
 }
 
+.nav-search {
+  background-color: #d7cdce;
+  border-style: none;
+  border-radius: 5%;
+}
+
 .welcome {
   font-family: sriracha, cursive;
   color: #683f3f;
