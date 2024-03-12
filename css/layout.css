@@ -18,11 +18,15 @@
 }
 
 .column-half {
-  width: 100%;
+  flex-basis: calc(100% / 2);
 }
 
 .welcome {
-  width: 60%;
+  width: 50%;
+}
+
+.nav-search {
+  width: 80px;
 }
 
 @media screen and (min-width: 769px) {
@@ -37,11 +41,15 @@
   }
 
   .landing-column {
-    width: 80%;
+    width: 60%;
   }
 
   .welcome {
-    width: 30%;
+    width: 40%;
+  }
+
+  .nav-search {
+    width: 120px;
   }
 }
 
@@ -56,4 +64,19 @@
 
 .landing-row {
   justify-content: center;
+}
+
+.search-row {
+  flex-wrap: nowrap;
+  align-items: start;
+}
+
+.search-column {
+  flex-basis: calc(100% / 2);
+}
+
+@media screen and (max-width: 450px) {
+  .image-column {
+    margin-left: -2.5rem;
+  }
 }
