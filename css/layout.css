@@ -51,6 +51,10 @@
   flex-basis: calc(100% / 2);
 }
 
+.column-third {
+  margin-top: 1.5rem;
+}
+
 @media screen and (min-width: 769px) {
   .container {
     max-width: 900px;
@@ -72,6 +76,14 @@
 
   .nav-search {
     width: 120px;
+  }
+
+  .column-third {
+    flex-basis: calc(100% / 3);
+  }
+
+  .column-two-thirds {
+    flex-basis: calc(200% / 3);
   }
 }
 
