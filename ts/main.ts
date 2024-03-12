@@ -95,9 +95,6 @@ $navSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
     }
   }
   $results.textContent = `results for '${searchInput}'`;
-  while ($dataView[2].lastChild) {
-    $dataView[2].removeChild($dataView[2].lastChild);
-  }
 });
 
 // *render functions below*
@@ -123,6 +120,9 @@ function renderSearch(search: Search): HTMLLIElement {
   $moreDetails.setAttribute('class', 'details text');
   $moreDetails.textContent = 'More details...';
   $moreDetails.addEventListener('click', async (event: Event) => {
+    while ($dataView[2].lastChild) {
+      $dataView[2].removeChild($dataView[2].lastChild);
+    }
     const $eventTarget = event.target as HTMLElement;
     const $closest = $eventTarget.closest('[data-id]') as HTMLAnchorElement;
     const animeId = $closest.getAttribute('data-id');

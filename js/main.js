@@ -77,9 +77,6 @@ $navSearch.addEventListener('keydown', async (event) => {
     }
   }
   $results.textContent = `results for '${searchInput}'`;
-  while ($dataView[2].lastChild) {
-    $dataView[2].removeChild($dataView[2].lastChild);
-  }
 });
 // *render functions below*
 function renderSearch(search) {
@@ -104,6 +101,9 @@ function renderSearch(search) {
   $moreDetails.setAttribute('class', 'details text');
   $moreDetails.textContent = 'More details...';
   $moreDetails.addEventListener('click', async (event) => {
+    while ($dataView[2].lastChild) {
+      $dataView[2].removeChild($dataView[2].lastChild);
+    }
     const $eventTarget = event.target;
     const $closest = $eventTarget.closest('[data-id]');
     const animeId = $closest.getAttribute('data-id');
