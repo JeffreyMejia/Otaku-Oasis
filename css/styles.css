@@ -1,0 +1,82 @@
+body {
+  background-color: #897d79;
+}
+
+.otaku-header {
+  background-color: #706198;
+}
+
+.otaku-oasis {
+  padding-left: 1rem;
+  font-family: sriracha, cursive;
+  text-shadow: #d7cdce 1px 2px;
+}
+
+.nav-search {
+  background-color: #d7cdce;
+  border-style: none;
+  border-radius: 5%;
+}
+
+.fa-solid fa-magnifying-glass {
+  color: black;
+}
+
+.welcome {
+  font-family: sriracha, cursive;
+  color: #683f3f;
+  text-shadow: white 1px 1px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.landing-search-label {
+  margin-left: -5rem;
+  color: white;
+}
+
+.landing-search {
+  background-color: #d7cdce;
+  border-style: none;
+  border-radius: 5%;
+  margin-left: -1rem;
+}
+
+.landing-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 520px;
+  background-image: url('/images/oasis.jpg');
+  background-repeat: no-repeat;
+  border-radius: 60%;
+}
+
+/*
+^stylings related to landing page^
+/below is stylings related to the search results page/ */
+.results {
+  margin-left: 2.5rem;
+  color: white;
+}
+
+.search-results {
+  list-style: none;
+}
+
+.no-results {
+  color: white;
+  margin-left: 2.5rem;
+}
+
+.title,
+.episodes,
+.details {
+  color: white;
+}
+
+.details {
+  text-decoration: none;
+  cursor: pointer;
+}

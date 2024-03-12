@@ -1,27 +1,17 @@
+'use strict';
 const $list = document.querySelector('.search-results');
 if (!$list) throw new Error('$list query has failed');
 const $dataView = document.querySelectorAll('div[data-view]');
-const $landingSearch = document.querySelector(
-  '.landing-search',
-) as HTMLInputElement;
+const $landingSearch = document.querySelector('.landing-search');
 if (!$landingSearch) throw new Error('$landingSearch query has failed');
-const $navSearch = document.querySelector('.nav-search') as HTMLInputElement;
+const $navSearch = document.querySelector('.nav-search');
 if (!$navSearch) throw new Error('$navSearch query has failed');
 const $noResults = document.querySelector('.no-results');
 const $results = document.querySelector('.results');
 if (!$results) throw new Error('$results query has failed');
 const $magnifyingGlass = document.querySelector('.fa-magnifying-glass');
-
-// ^queries above^
-
-interface Search {
-  title: string;
-  imageURL: string;
-  episodes: string;
-}
-
 // landing page search
-$landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
+$landingSearch.addEventListener('keydown', async (event) => {
   const key = event.key;
   const searchInput = $landingSearch.value;
   if (key === 'Enter') {
@@ -33,7 +23,7 @@ $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
       const anime = await response.json();
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
-          const search: Search = {
+          const search = {
             title: anime.data[i].title,
             imageURL: anime?.data[i]?.images?.jpg?.image_url,
             episodes: anime.data[i].episodes,
@@ -51,9 +41,8 @@ $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
   }
   $results.textContent = `results for '${searchInput}'`;
 });
-
 // nav bar search
-$navSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
+$navSearch.addEventListener('keydown', async (event) => {
   const key = event.key;
   const searchInput = $navSearch.value;
   if (key === 'Enter') {
@@ -68,7 +57,7 @@ $navSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
       const anime = await response.json();
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
-          const search: Search = {
+          const search = {
             title: anime.data[i].title,
             imageURL: anime?.data[i]?.images?.jpg?.image_url,
             episodes: anime.data[i].episodes,
@@ -86,8 +75,7 @@ $navSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
   }
   $results.textContent = `results for '${searchInput}'`;
 });
-
-function renderSearch(search: Search): HTMLLIElement {
+function renderSearch(search) {
   const $listItem = document.createElement('li');
   const $row = document.createElement('div');
   $row.setAttribute('class', 'row search-row');
@@ -108,7 +96,6 @@ function renderSearch(search: Search): HTMLLIElement {
   $moreDetails.setAttribute('href', '#');
   $moreDetails.setAttribute('class', 'details');
   $moreDetails.textContent = 'More details...';
-
   $listItem.appendChild($row);
   $row.appendChild($columnHalf1);
   $columnHalf1.appendChild($image);
@@ -116,11 +103,9 @@ function renderSearch(search: Search): HTMLLIElement {
   $columnHalf2.appendChild($title);
   $columnHalf2.appendChild($episodes);
   $columnHalf2.appendChild($moreDetails);
-
   return $listItem;
 }
-
-function viewSwap(view: string): void {
+function viewSwap(view) {
   if (view === 'landing') {
     $dataView[0].setAttribute('class', 'active');
     $dataView[1].setAttribute('class', 'hidden');
