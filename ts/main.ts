@@ -31,6 +31,7 @@ $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
       );
       if (!response.ok) throw new Error('Network response was not OK');
       const anime = await response.json();
+      console.log(anime);
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
           const search: Search = {
@@ -94,19 +95,18 @@ function renderSearch(search: Search): HTMLLIElement {
   const $columnHalf1 = document.createElement('div');
   $columnHalf1.setAttribute('class', 'column-half search-column image-column');
   const $image = document.createElement('img');
-  $image.setAttribute('class', 'list-image');
   $image.setAttribute('src', search.imageURL);
   const $columnHalf2 = document.createElement('div');
   $columnHalf2.setAttribute('class', 'column-half search-column text-column');
   const $title = document.createElement('h2');
-  $title.setAttribute('class', 'title');
+  $title.setAttribute('class', 'title text');
   $title.textContent = search.title;
   const $episodes = document.createElement('h3');
-  $episodes.setAttribute('class', 'episodes');
+  $episodes.setAttribute('class', 'episodes text');
   $episodes.textContent = search.episodes;
   const $moreDetails = document.createElement('a');
   $moreDetails.setAttribute('href', '#');
-  $moreDetails.setAttribute('class', 'details');
+  $moreDetails.setAttribute('class', 'details text');
   $moreDetails.textContent = 'More details...';
 
   $listItem.appendChild($row);
@@ -120,15 +120,72 @@ function renderSearch(search: Search): HTMLLIElement {
   return $listItem;
 }
 
+// function renderDetails(anime) {
+// const $row = document.createElement('div');
+// $row.setAttribute('class', 'row');
+// const $columnThird = document.createElement('div');
+// $columnThird.setAttribute('class', 'column-third');
+// const $image = document.createElement('img');
+// $image.setAttribute('src', );
+// const $title = document.createElement('h2');
+// $title.setAttribute('class', 'title text');
+// $title.textContent = ;
+// const $type = document.createElement('p')
+// $type.setAttribute('class', 'type text');
+// $type.textContent = ;
+// const $episodes = document.createElement('p');
+// $episodes.setAttribute('class', 'episodes text');
+// $episodes.textContent = ;
+// const $status = document.createElement('p');
+// $status.setAttribute('class', 'type text');
+// $status.textContent = ;
+// const $aired = document.createElement('p');
+// $aired.setAttribute('class', 'aired text');
+// $aired.textContent = ;
+// const $premiered = document.createElement('p');
+// $premiered.setAttribute('class', 'premiered text');
+// $premiered.textContent = ;
+// const $columnTwoThirds = document.createElement('div');
+// $columnTwoThirds.setAttribute('class', 'column-two-thirds');
+// const $synopsisHeading = document.createElement('h2');
+// $synopsisHeading.setAttribute('class', 'synopsis text');
+// $synopsisHeading.textContent = 'Synopsis'
+// const $synopsis = document.createElement('p');
+// $synopsis.setAttribute('class', 'synopsis text');
+// $synopsis.textContent = ;
+
+// $row.appendChild($columnThird);
+// $columnThird.appendChild($image);
+// $columnThird.appendChild($title);
+// $columnThird.appendChild($type);
+// $columnThird.appendChild($episodes);
+// $columnThird.appendChild($status);
+// $columnThird.appendChild($aired);
+// $columnThird.appendChild($premiered);
+// $row.appendChild($columnTwoThirds)
+// $columnTwoThirds.appendChild($synopsisHeading);
+// $columnTwoThirds.appendChild($synopsis);
+
+// return $row
+// }
+
 function viewSwap(view: string): void {
   if (view === 'landing') {
     $dataView[0].setAttribute('class', 'active');
     $dataView[1].setAttribute('class', 'hidden');
+    $dataView[2].setAttribute('class', 'hidden');
     $navSearch?.setAttribute('class', 'nav-search hidden');
     $magnifyingGlass?.setAttribute('class', 'hidden');
   } else if (view === 'search') {
     $dataView[0].setAttribute('class', 'hidden');
     $dataView[1].setAttribute('class', 'active');
+    $dataView[2].setAttribute('class', 'hidden');
+    $navSearch?.setAttribute('class', 'nav-search');
+    $magnifyingGlass?.setAttribute('class', 'fa-solid fa-magnifying-glass');
+  } else if (view === 'details') {
+    $dataView[0].setAttribute('class', 'hidden');
+    $dataView[1].setAttribute('class', 'hidden');
+    $dataView[2].setAttribute('class', 'active');
     $navSearch?.setAttribute('class', 'nav-search');
     $magnifyingGlass?.setAttribute('class', 'fa-solid fa-magnifying-glass');
   }
