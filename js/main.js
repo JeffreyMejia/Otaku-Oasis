@@ -28,6 +28,7 @@ $landingSearch.addEventListener('keydown', async (event) => {
             title: anime.data[i].title,
             imageURL: anime?.data[i]?.images?.jpg?.image_url,
             episodes: anime.data[i].episodes,
+            animeId: anime.data[i].mal_id,
           };
           const newSearch = renderSearch(search);
           $list?.appendChild(newSearch);
@@ -62,6 +63,7 @@ $navSearch.addEventListener('keydown', async (event) => {
             title: anime.data[i].title,
             imageURL: anime?.data[i]?.images?.jpg?.image_url,
             episodes: anime.data[i].episodes,
+            animeId: anime.data[i].mal_id,
           };
           const newSearch = renderSearch(search);
           $list?.appendChild(newSearch);
@@ -75,9 +77,14 @@ $navSearch.addEventListener('keydown', async (event) => {
     }
   }
   $results.textContent = `results for '${searchInput}'`;
+  while ($dataView[2].lastChild) {
+    $dataView[2].removeChild($dataView[2].lastChild);
+  }
 });
+// *render functions below*
 function renderSearch(search) {
   const $listItem = document.createElement('li');
+  $listItem.setAttribute('data-id', String(search.animeId));
   const $row = document.createElement('div');
   $row.setAttribute('class', 'row search-row');
   const $columnHalf1 = document.createElement('div');
@@ -91,11 +98,37 @@ function renderSearch(search) {
   $title.textContent = search.title;
   const $episodes = document.createElement('h3');
   $episodes.setAttribute('class', 'episodes text');
-  $episodes.textContent = search.episodes;
+  $episodes.textContent = `Eps ${search.episodes}`;
   const $moreDetails = document.createElement('a');
   $moreDetails.setAttribute('href', '#');
   $moreDetails.setAttribute('class', 'details text');
   $moreDetails.textContent = 'More details...';
+  $moreDetails.addEventListener('click', async (event) => {
+    const $eventTarget = event.target;
+    const $closest = $eventTarget.closest('[data-id]');
+    const animeId = $closest.getAttribute('data-id');
+    try {
+      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const individualAnime = await response.json();
+      const anime = {
+        title: individualAnime.data.title,
+        imageURL: individualAnime?.data?.images?.jpg?.image_url,
+        episodes: individualAnime.data.episodes,
+        type: individualAnime.data.type,
+        status: individualAnime.data.status,
+        aired: individualAnime.data.aired.string,
+        premiered: individualAnime.data.season,
+        rating: individualAnime.data.rating,
+        synopsis: individualAnime.data.synopsis,
+      };
+      const details = renderDetails(anime);
+      $dataView[2].appendChild(details);
+      viewSwap('details');
+    } catch (error) {
+      console.error('There was a problem with your fetch:', error);
+    }
+  });
   $listItem.appendChild($row);
   $row.appendChild($columnHalf1);
   $columnHalf1.appendChild($image);
@@ -105,52 +138,56 @@ function renderSearch(search) {
   $columnHalf2.appendChild($moreDetails);
   return $listItem;
 }
-// function renderDetails(anime) {
-// const $row = document.createElement('div');
-// $row.setAttribute('class', 'row');
-// const $columnThird = document.createElement('div');
-// $columnThird.setAttribute('class', 'column-third');
-// const $image = document.createElement('img');
-// $image.setAttribute('src', );
-// const $title = document.createElement('h2');
-// $title.setAttribute('class', 'title text');
-// $title.textContent = ;
-// const $type = document.createElement('p')
-// $type.setAttribute('class', 'type text');
-// $type.textContent = ;
-// const $episodes = document.createElement('p');
-// $episodes.setAttribute('class', 'episodes text');
-// $episodes.textContent = ;
-// const $status = document.createElement('p');
-// $status.setAttribute('class', 'type text');
-// $status.textContent = ;
-// const $aired = document.createElement('p');
-// $aired.setAttribute('class', 'aired text');
-// $aired.textContent = ;
-// const $premiered = document.createElement('p');
-// $premiered.setAttribute('class', 'premiered text');
-// $premiered.textContent = ;
-// const $columnTwoThirds = document.createElement('div');
-// $columnTwoThirds.setAttribute('class', 'column-two-thirds');
-// const $synopsisHeading = document.createElement('h2');
-// $synopsisHeading.setAttribute('class', 'synopsis text');
-// $synopsisHeading.textContent = 'Synopsis'
-// const $synopsis = document.createElement('p');
-// $synopsis.setAttribute('class', 'synopsis text');
-// $synopsis.textContent = ;
-// $row.appendChild($columnThird);
-// $columnThird.appendChild($image);
-// $columnThird.appendChild($title);
-// $columnThird.appendChild($type);
-// $columnThird.appendChild($episodes);
-// $columnThird.appendChild($status);
-// $columnThird.appendChild($aired);
-// $columnThird.appendChild($premiered);
-// $row.appendChild($columnTwoThirds)
-// $columnTwoThirds.appendChild($synopsisHeading);
-// $columnTwoThirds.appendChild($synopsis);
-// return $row
-// }
+function renderDetails(anime) {
+  const $row = document.createElement('div');
+  $row.setAttribute('class', 'row');
+  const $columnThird = document.createElement('div');
+  $columnThird.setAttribute('class', 'column-third');
+  const $image = document.createElement('img');
+  $image.setAttribute('src', anime.imageURL);
+  const $title = document.createElement('h2');
+  $title.setAttribute('class', 'title text');
+  $title.textContent = anime.title;
+  const $type = document.createElement('p');
+  $type.setAttribute('class', 'type text');
+  $type.textContent = `Type: ${anime.type}`;
+  const $episodes = document.createElement('p');
+  $episodes.setAttribute('class', 'episodes text');
+  $episodes.textContent = `Episodes: ${anime.episodes} `;
+  const $status = document.createElement('p');
+  $status.setAttribute('class', 'type text');
+  $status.textContent = `Status: ${anime.status}`;
+  const $aired = document.createElement('p');
+  $aired.setAttribute('class', 'aired text');
+  $aired.textContent = `Aired: ${anime.aired}`;
+  const $premiered = document.createElement('p');
+  $premiered.setAttribute('class', 'premiered text');
+  $premiered.textContent = `Premiered: ${anime.premiered}`;
+  const $rating = document.createElement('p');
+  $rating.setAttribute('class', 'rating text');
+  $rating.textContent = `Rating: ${anime.rating}`;
+  const $columnTwoThirds = document.createElement('div');
+  $columnTwoThirds.setAttribute('class', 'column-two-thirds');
+  const $synopsisHeading = document.createElement('h2');
+  $synopsisHeading.setAttribute('class', 'synopsis text');
+  $synopsisHeading.textContent = 'Synopsis';
+  const $synopsis = document.createElement('p');
+  $synopsis.setAttribute('class', 'synopsis text');
+  $synopsis.textContent = String(anime.synopsis);
+  $row.appendChild($columnThird);
+  $columnThird.appendChild($image);
+  $columnThird.appendChild($title);
+  $columnThird.appendChild($type);
+  $columnThird.appendChild($episodes);
+  $columnThird.appendChild($status);
+  $columnThird.appendChild($aired);
+  $columnThird.appendChild($premiered);
+  $columnThird.appendChild($rating);
+  $row.appendChild($columnTwoThirds);
+  $columnTwoThirds.appendChild($synopsisHeading);
+  $columnTwoThirds.appendChild($synopsis);
+  return $row;
+}
 function viewSwap(view) {
   if (view === 'landing') {
     $dataView[0].setAttribute('class', 'active');
