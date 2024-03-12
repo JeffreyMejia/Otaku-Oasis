@@ -14,14 +14,20 @@ const $magnifyingGlass = document.querySelector('.fa-magnifying-glass');
 
 // ^queries above^
 
+interface Search {
+  title: string;
+  imageURL: string;
+  episodes: string;
+}
+
 // landing page search
 $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
-  const $key = event.key;
-  const $searchInput = $landingSearch.value;
-  if ($key === 'Enter') {
+  const key = event.key;
+  const searchInput = $landingSearch.value;
+  if (key === 'Enter') {
     try {
       const response = await fetch(
-        `https://api.jikan.moe/v4/anime?sfw&q=${$searchInput}&type=tv`,
+        `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=tv`,
       );
       if (!response.ok) throw new Error('Network response was not OK');
       const anime = await response.json();
@@ -43,17 +49,17 @@ $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
       console.error('There was a problem with your fetch:', error);
     }
   }
-  $results.textContent = `results for '${$searchInput}'`;
+  $results.textContent = `results for '${searchInput}'`;
 });
 
 // nav bar search
 $navSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
-  const $key = event.key;
-  const $searchInput = $navSearch.value;
-  if ($key === 'Enter') {
+  const key = event.key;
+  const searchInput = $navSearch.value;
+  if (key === 'Enter') {
     try {
       const response = await fetch(
-        `https://api.jikan.moe/v4/anime?sfw&q=${$searchInput}&type=tv`,
+        `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=tv`,
       );
       if (!response.ok) throw new Error('Network response was not OK');
       while ($list.firstChild) {
@@ -78,7 +84,7 @@ $navSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
       console.error('There was a problem with your fetch:', error);
     }
   }
-  $results.textContent = `results for '${$searchInput}'`;
+  $results.textContent = `results for '${searchInput}'`;
 });
 
 function renderSearch(search: Search): HTMLLIElement {
@@ -91,11 +97,11 @@ function renderSearch(search: Search): HTMLLIElement {
   $image.setAttribute('class', 'list-image');
   $image.setAttribute('src', search.imageURL);
   const $columnHalf2 = document.createElement('div');
-  $columnHalf2.setAttribute('class', 'column-half search-column');
-  const $title = document.createElement('h1');
+  $columnHalf2.setAttribute('class', 'column-half search-column text-column');
+  const $title = document.createElement('h2');
   $title.setAttribute('class', 'title');
   $title.textContent = search.title;
-  const $episodes = document.createElement('h2');
+  const $episodes = document.createElement('h3');
   $episodes.setAttribute('class', 'episodes');
   $episodes.textContent = search.episodes;
   const $moreDetails = document.createElement('a');
