@@ -38,7 +38,6 @@ $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
       );
       if (!response.ok) throw new Error('Network response was not OK');
       const anime = await response.json();
-      console.log(anime);
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
           const search: Search = {
