@@ -4,7 +4,7 @@ interface Search {
   title: string;
   imageURL: string;
   episodes: string;
-  mal_id?: number;
+  animeId?: number;
   type?: string;
   status?: string;
   aired?: string;
@@ -14,12 +14,10 @@ interface Search {
 }
 
 interface Data {
-  searchResults: Search[];
   watchlist: Search[];
 }
 
 let data: Data = {
-  searchResults: [],
   watchlist: [],
 };
 

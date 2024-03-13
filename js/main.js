@@ -10,17 +10,6 @@ const $noResults = document.querySelector('.no-results');
 const $results = document.querySelector('.results');
 if (!$results) throw new Error('$results query has failed');
 const $magnifyingGlass = document.querySelector('.fa-magnifying-glass');
-// ^queries above^
-$list.addEventListener('click', (event) => {
-  const $eventTarget = event.target;
-  const $closest = $eventTarget.closest('[data-id]');
-  const animeId = $closest.getAttribute('data-id');
-  for (let i = 0; i < data.searchResults.length; i++) {
-    if (Number(animeId) === data.searchResults[i].mal_id) {
-      console.log(data.searchResults[i]);
-    }
-  }
-});
 // landing page search
 $landingSearch.addEventListener('keydown', async (event) => {
   const key = event.key;
@@ -32,14 +21,13 @@ $landingSearch.addEventListener('keydown', async (event) => {
       );
       if (!response.ok) throw new Error('Network response was not OK');
       const anime = await response.json();
-      data.searchResults = anime.data;
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
           const search = {
             title: anime.data[i].title,
             imageURL: anime?.data[i]?.images?.jpg?.image_url,
             episodes: anime.data[i].episodes,
-            mal_id: anime.data[i].mal_id,
+            animeId: anime.data[i].mal_id,
           };
           const newSearch = renderSearch(search);
           $list?.appendChild(newSearch);
@@ -68,14 +56,13 @@ $navSearch.addEventListener('keydown', async (event) => {
         $list.removeChild($list.firstChild);
       }
       const anime = await response.json();
-      data.searchResults = anime.data;
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
           const search = {
             title: anime.data[i].title,
             imageURL: anime?.data[i]?.images?.jpg?.image_url,
             episodes: anime.data[i].episodes,
-            mal_id: anime.data[i].mal_id,
+            animeId: anime.data[i].mal_id,
           };
           const newSearch = renderSearch(search);
           $list?.appendChild(newSearch);
@@ -93,7 +80,7 @@ $navSearch.addEventListener('keydown', async (event) => {
 // *render functions below*
 function renderSearch(search) {
   const $listItem = document.createElement('li');
-  $listItem.setAttribute('data-id', String(search.mal_id));
+  $listItem.setAttribute('data-id', String(search.animeId));
   const $row = document.createElement('div');
   $row.setAttribute('class', 'row search-row');
   const $columnHalf1 = document.createElement('div');
@@ -138,10 +125,39 @@ function renderSearch(search) {
         premiered: individualAnime.data.season,
         rating: individualAnime.data.rating,
         synopsis: individualAnime.data.synopsis,
+        animeId: individualAnime.data.mal_id,
       };
       const details = renderDetails(anime);
       $dataView[2].appendChild(details);
       viewSwap('details');
+    } catch (error) {
+      console.error('There was a problem with your fetch:', error);
+    }
+  });
+  $add.addEventListener('click', async (event) => {
+    const $eventTarget = event.target;
+    const $closest = $eventTarget.closest('[data-id]');
+    const animeId = $closest.getAttribute('data-id');
+    try {
+      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const individualAnime = await response.json();
+      const anime = {
+        title: individualAnime.data.title,
+        imageURL: individualAnime?.data?.images?.jpg?.image_url,
+        episodes: individualAnime.data.episodes,
+        animeId: individualAnime.data.mal_id,
+      };
+      if (data.watchlist.length === 0) {
+        data.watchlist.unshift(anime);
+      } else {
+        for (let i = 0; i < data.watchlist.length; i++) {
+          if (anime.animeId !== data.watchlist[i].animeId) {
+            data.watchlist.unshift(anime);
+          }
+        }
+      }
+      console.log(data);
     } catch (error) {
       console.error('There was a problem with your fetch:', error);
     }
@@ -171,6 +187,7 @@ function renderDetails(anime) {
   $add.textContent = 'Add to watchlist';
   const $title = document.createElement('h2');
   $title.setAttribute('class', 'title text');
+  $title.setAttribute('data-id', String(anime.animeId));
   $title.textContent = anime.title;
   const $type = document.createElement('p');
   $type.setAttribute('class', 'type text');
@@ -198,6 +215,35 @@ function renderDetails(anime) {
   const $synopsis = document.createElement('p');
   $synopsis.setAttribute('class', 'synopsis text');
   $synopsis.textContent = String(anime.synopsis);
+  $add.addEventListener('click', async (event) => {
+    const $eventTarget = event.target;
+    const $closest = $eventTarget.closest('[data-id]');
+    const animeId = $closest.getAttribute('data-id');
+    console.log(animeId);
+    try {
+      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const individualAnime = await response.json();
+      const anime = {
+        title: individualAnime.data.title,
+        imageURL: individualAnime?.data?.images?.jpg?.image_url,
+        episodes: individualAnime.data.episodes,
+        animeId: individualAnime.data.mal_id,
+      };
+      if (data.watchlist.length === 0) {
+        data.watchlist.unshift(anime);
+      } else {
+        for (let i = 0; i < data.watchlist.length; i++) {
+          if (anime.animeId !== data.watchlist[i].animeId) {
+            data.watchlist.unshift(anime);
+          }
+        }
+      }
+      console.log(data);
+    } catch (error) {
+      console.error('There was a problem with your fetch:', error);
+    }
+  });
   $row.appendChild($columnThird);
   $columnThird.appendChild($image);
   $columnThird.appendChild($buttonDiv);

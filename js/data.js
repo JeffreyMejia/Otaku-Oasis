@@ -1,7 +1,6 @@
 'use strict';
 /* exported data */
 let data = {
-  searchResults: [],
   watchlist: [],
 };
 window.addEventListener('beforeunload', () => {
