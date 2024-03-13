@@ -14,18 +14,17 @@ const $magnifyingGlass = document.querySelector('.fa-magnifying-glass');
 
 // ^queries above^
 
-interface Search {
-  title: string;
-  imageURL: string;
-  episodes: string;
-  animeId?: number;
-  type?: string;
-  status?: string;
-  aired?: string;
-  premiered?: string;
-  rating?: string;
-  synopsis?: string;
-}
+$list.addEventListener('click', (event: Event) => {
+  const $eventTarget = event.target as HTMLElement;
+  const $closest = $eventTarget.closest('[data-id]') as HTMLLIElement;
+  const animeId = $closest.getAttribute('data-id');
+
+  for (let i = 0; i < data.searchResults.length; i++) {
+    if (Number(animeId) === data.searchResults[i].mal_id) {
+      console.log(data.searchResults[i]);
+    }
+  }
+});
 
 // landing page search
 $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
@@ -38,13 +37,14 @@ $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
       );
       if (!response.ok) throw new Error('Network response was not OK');
       const anime = await response.json();
+      data.searchResults = anime.data as Search[];
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
           const search: Search = {
             title: anime.data[i].title,
             imageURL: anime?.data[i]?.images?.jpg?.image_url,
             episodes: anime.data[i].episodes,
-            animeId: anime.data[i].mal_id,
+            mal_id: anime.data[i].mal_id,
           };
           const newSearch = renderSearch(search);
           $list?.appendChild(newSearch);
@@ -74,13 +74,14 @@ $navSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
         $list.removeChild($list.firstChild);
       }
       const anime = await response.json();
+      data.searchResults = anime.data;
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
           const search: Search = {
             title: anime.data[i].title,
             imageURL: anime?.data[i]?.images?.jpg?.image_url,
             episodes: anime.data[i].episodes,
-            animeId: anime.data[i].mal_id,
+            mal_id: anime.data[i].mal_id,
           };
           const newSearch = renderSearch(search);
           $list?.appendChild(newSearch);
@@ -99,13 +100,18 @@ $navSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
 // *render functions below*
 function renderSearch(search: Search): HTMLLIElement {
   const $listItem = document.createElement('li');
-  $listItem.setAttribute('data-id', String(search.animeId));
+  $listItem.setAttribute('data-id', String(search.mal_id));
   const $row = document.createElement('div');
   $row.setAttribute('class', 'row search-row');
   const $columnHalf1 = document.createElement('div');
   $columnHalf1.setAttribute('class', 'column-half search-column image-column');
   const $image = document.createElement('img');
   $image.setAttribute('src', search.imageURL);
+  const $buttonDiv = document.createElement('div');
+  $buttonDiv.setAttribute('class', 'button-div');
+  const $add = document.createElement('button');
+  $add.setAttribute('class', 'add-button');
+  $add.textContent = 'Add to watchlist';
   const $columnHalf2 = document.createElement('div');
   $columnHalf2.setAttribute('class', 'column-half search-column text-column');
   const $title = document.createElement('h2');
@@ -151,6 +157,8 @@ function renderSearch(search: Search): HTMLLIElement {
   $listItem.appendChild($row);
   $row.appendChild($columnHalf1);
   $columnHalf1.appendChild($image);
+  $columnHalf1.appendChild($buttonDiv);
+  $buttonDiv.appendChild($add);
   $row.appendChild($columnHalf2);
   $columnHalf2.appendChild($title);
   $columnHalf2.appendChild($episodes);
@@ -166,6 +174,11 @@ function renderDetails(anime: Search): HTMLDivElement {
   $columnThird.setAttribute('class', 'column-third');
   const $image = document.createElement('img');
   $image.setAttribute('src', anime.imageURL);
+  const $buttonDiv = document.createElement('div');
+  $buttonDiv.setAttribute('class', 'button-div');
+  const $add = document.createElement('button');
+  $add.setAttribute('class', 'add-button');
+  $add.textContent = 'Add to watchlist';
   const $title = document.createElement('h2');
   $title.setAttribute('class', 'title text');
   $title.textContent = anime.title;
@@ -198,6 +211,8 @@ function renderDetails(anime: Search): HTMLDivElement {
 
   $row.appendChild($columnThird);
   $columnThird.appendChild($image);
+  $columnThird.appendChild($buttonDiv);
+  $buttonDiv.appendChild($add);
   $columnThird.appendChild($title);
   $columnThird.appendChild($type);
   $columnThird.appendChild($episodes);
