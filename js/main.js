@@ -148,16 +148,10 @@ function renderSearch(search) {
         episodes: individualAnime.data.episodes,
         animeId: individualAnime.data.mal_id,
       };
-      if (data.watchlist.length === 0) {
-        data.watchlist.unshift(anime);
-      } else {
-        for (let i = 0; i < data.watchlist.length; i++) {
-          if (anime.animeId !== data.watchlist[i].animeId) {
-            data.watchlist.unshift(anime);
-          }
-        }
-      }
-      console.log(data);
+      const exists = data.watchlist.find(
+        (fav) => anime.animeId === fav.animeId,
+      );
+      if (!exists) data.watchlist.push(anime);
     } catch (error) {
       console.error('There was a problem with your fetch:', error);
     }
@@ -178,6 +172,7 @@ function renderDetails(anime) {
   $row.setAttribute('class', 'row');
   const $columnThird = document.createElement('div');
   $columnThird.setAttribute('class', 'column-third');
+  $columnThird.setAttribute('data-id', String(anime.animeId));
   const $image = document.createElement('img');
   $image.setAttribute('src', anime.imageURL);
   const $buttonDiv = document.createElement('div');
@@ -187,7 +182,6 @@ function renderDetails(anime) {
   $add.textContent = 'Add to watchlist';
   const $title = document.createElement('h2');
   $title.setAttribute('class', 'title text');
-  $title.setAttribute('data-id', String(anime.animeId));
   $title.textContent = anime.title;
   const $type = document.createElement('p');
   $type.setAttribute('class', 'type text');
@@ -219,7 +213,6 @@ function renderDetails(anime) {
     const $eventTarget = event.target;
     const $closest = $eventTarget.closest('[data-id]');
     const animeId = $closest.getAttribute('data-id');
-    console.log(animeId);
     try {
       const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
       if (!response.ok) throw new Error('Network response was not ok');
@@ -230,16 +223,10 @@ function renderDetails(anime) {
         episodes: individualAnime.data.episodes,
         animeId: individualAnime.data.mal_id,
       };
-      if (data.watchlist.length === 0) {
-        data.watchlist.unshift(anime);
-      } else {
-        for (let i = 0; i < data.watchlist.length; i++) {
-          if (anime.animeId !== data.watchlist[i].animeId) {
-            data.watchlist.unshift(anime);
-          }
-        }
-      }
-      console.log(data);
+      const exists = data.watchlist.find(
+        (fav) => anime.animeId === fav.animeId,
+      );
+      if (!exists) data.watchlist.push(anime);
     } catch (error) {
       console.error('There was a problem with your fetch:', error);
     }
