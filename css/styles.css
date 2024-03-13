@@ -78,3 +78,12 @@ body {
   text-decoration: none;
   cursor: pointer;
 }
+
+.add-button {
+  color: #d7cdce;
+  background-color: #683f3f;
+  border-radius: 7.5%;
+  border-style: none;
+  height: 2rem;
+  cursor: pointer;
+}

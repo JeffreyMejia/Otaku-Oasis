@@ -87,6 +87,11 @@ function renderSearch(search) {
   $columnHalf1.setAttribute('class', 'column-half search-column image-column');
   const $image = document.createElement('img');
   $image.setAttribute('src', search.imageURL);
+  const $buttonDiv = document.createElement('div');
+  $buttonDiv.setAttribute('class', 'button-div');
+  const $add = document.createElement('button');
+  $add.setAttribute('class', 'add-button');
+  $add.textContent = 'Add to watchlist';
   const $columnHalf2 = document.createElement('div');
   $columnHalf2.setAttribute('class', 'column-half search-column text-column');
   const $title = document.createElement('h2');
@@ -120,6 +125,7 @@ function renderSearch(search) {
         premiered: individualAnime.data.season,
         rating: individualAnime.data.rating,
         synopsis: individualAnime.data.synopsis,
+        animeId: individualAnime.data.mal_id,
       };
       const details = renderDetails(anime);
       $dataView[2].appendChild(details);
@@ -128,9 +134,33 @@ function renderSearch(search) {
       console.error('There was a problem with your fetch:', error);
     }
   });
+  $add.addEventListener('click', async (event) => {
+    const $eventTarget = event.target;
+    const $closest = $eventTarget.closest('[data-id]');
+    const animeId = $closest.getAttribute('data-id');
+    try {
+      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const individualAnime = await response.json();
+      const anime = {
+        title: individualAnime.data.title,
+        imageURL: individualAnime?.data?.images?.jpg?.image_url,
+        episodes: individualAnime.data.episodes,
+        animeId: individualAnime.data.mal_id,
+      };
+      const exists = data.watchlist.find(
+        (fav) => anime.animeId === fav.animeId,
+      );
+      if (!exists) data.watchlist.push(anime);
+    } catch (error) {
+      console.error('There was a problem with your fetch:', error);
+    }
+  });
   $listItem.appendChild($row);
   $row.appendChild($columnHalf1);
   $columnHalf1.appendChild($image);
+  $columnHalf1.appendChild($buttonDiv);
+  $buttonDiv.appendChild($add);
   $row.appendChild($columnHalf2);
   $columnHalf2.appendChild($title);
   $columnHalf2.appendChild($episodes);
@@ -142,8 +172,14 @@ function renderDetails(anime) {
   $row.setAttribute('class', 'row');
   const $columnThird = document.createElement('div');
   $columnThird.setAttribute('class', 'column-third');
+  $columnThird.setAttribute('data-id', String(anime.animeId));
   const $image = document.createElement('img');
   $image.setAttribute('src', anime.imageURL);
+  const $buttonDiv = document.createElement('div');
+  $buttonDiv.setAttribute('class', 'button-div');
+  const $add = document.createElement('button');
+  $add.setAttribute('class', 'add-button');
+  $add.textContent = 'Add to watchlist';
   const $title = document.createElement('h2');
   $title.setAttribute('class', 'title text');
   $title.textContent = anime.title;
@@ -173,8 +209,32 @@ function renderDetails(anime) {
   const $synopsis = document.createElement('p');
   $synopsis.setAttribute('class', 'synopsis text');
   $synopsis.textContent = String(anime.synopsis);
+  $add.addEventListener('click', async (event) => {
+    const $eventTarget = event.target;
+    const $closest = $eventTarget.closest('[data-id]');
+    const animeId = $closest.getAttribute('data-id');
+    try {
+      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const individualAnime = await response.json();
+      const anime = {
+        title: individualAnime.data.title,
+        imageURL: individualAnime?.data?.images?.jpg?.image_url,
+        episodes: individualAnime.data.episodes,
+        animeId: individualAnime.data.mal_id,
+      };
+      const exists = data.watchlist.find(
+        (fav) => anime.animeId === fav.animeId,
+      );
+      if (!exists) data.watchlist.push(anime);
+    } catch (error) {
+      console.error('There was a problem with your fetch:', error);
+    }
+  });
   $row.appendChild($columnThird);
   $columnThird.appendChild($image);
+  $columnThird.appendChild($buttonDiv);
+  $buttonDiv.appendChild($add);
   $columnThird.appendChild($title);
   $columnThird.appendChild($type);
   $columnThird.appendChild($episodes);
