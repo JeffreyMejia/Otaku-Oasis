@@ -17,7 +17,7 @@ const $otakuOasis = document.querySelector('.otaku-oasis');
 const $watchlist = document.querySelector('.watchlist');
 if (!$watchlist) throw new Error('$watchlist query has failed');
 const $dialog = document.querySelector('dialog');
-// const $cancel = document.querySelector('.cancel');
+const $cancel = document.querySelector('.cancel');
 // const $confirm = document.querySelector('.confirm');
 
 // LANDING PAGE SEARCH
@@ -336,7 +336,29 @@ function viewSwap(view: string): void {
 }
 
 // *MODAL LISTENERS*
+$cancel?.addEventListener('click', () => {
+  $dialog?.close();
+});
 
+// $confirm?.addEventListener('click', (event: Event) => {
+//   const $li = document.querySelectorAll('li');
+//   for (let i = 0; i < $li.length; i++) {
+//     const matches = data.watchlist.find(
+//       ({ animeId }) => String(animeId) === $li[i].getAttribute('data-id'),
+//     );
+//     if (matches) {
+//       $li[i].remove;
+//       data.watchlist = data.watchlist.filter(
+//         (anime) => String(anime.animeId) !== $li[i].getAttribute('data-id'),
+//       );
+//     }
+//   }
+//   noFavorites();
+//   $dialog?.close();
+//   viewSwap('watchist');
+// });
+
+// *CREATES WATCHLIST*
 document.addEventListener('DOMContentLoaded', () => {
   for (let i = 0; i < data.watchlist.length; i++) {
     const $newEntry = renderWatchlist(data.watchlist[i]);
