@@ -55,7 +55,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 520px;
-  background-image: url('/images/oasis.jpg');
+  background-image: url('images/oasis.jpg');
   background-repeat: no-repeat;
   border-radius: 60%;
 }
@@ -95,6 +95,39 @@ body {
   cursor: pointer;
 }
 
+/* ^Search results styles above^
+/Watchlist below/ */
+
 .watchlist {
   list-style: none;
+}
+
+.fa-trash-can {
+  color: #683f3f;
+  margin-top: 1.5rem;
+  cursor: pointer;
+}
+
+dialog {
+  border-style: none;
+  border-radius: 2%;
+  box-shadow: black;
+}
+
+.uWu {
+  font-family: sans-serif;
+}
+
+.cancel {
+  color: #706198;
+  background-color: #ba9779;
+  border-style: none;
+  border-radius: 5%;
+}
+
+.confirm {
+  color: #d7cdce;
+  background-color: #683f3f;
+  border-style: none;
+  border-radius: 5%;
 }

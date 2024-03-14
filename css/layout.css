@@ -55,6 +55,14 @@
   margin-top: 1.5rem;
 }
 
+.uWu-row {
+  justify-content: center;
+}
+
+.modal-row {
+  justify-content: space-between;
+}
+
 @media screen and (min-width: 769px) {
   .container {
     max-width: 900px;
@@ -85,6 +93,14 @@
   .column-two-thirds {
     flex-basis: calc(200% / 3);
   }
+
+  .cancel {
+    height: 2rem;
+  }
+
+  .confirm {
+    height: 2rem;
+  }
 }
 
 @media screen and (max-width: 450px) {
@@ -94,5 +110,13 @@
 
   .text-column {
     margin-left: 1rem;
+  }
+
+  dialog {
+    width: 70%;
+  }
+
+  .uWu {
+    font-size: 14px;
   }
 }

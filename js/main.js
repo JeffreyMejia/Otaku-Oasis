@@ -15,7 +15,10 @@ const $bookmark = document.querySelector('.fa-bookmark');
 const $otakuOasis = document.querySelector('.otaku-oasis');
 const $watchlist = document.querySelector('.watchlist');
 if (!$watchlist) throw new Error('$watchlist query has failed');
-// landing page search
+const $dialog = document.querySelector('dialog');
+const $cancel = document.querySelector('.cancel');
+const $confirm = document.querySelector('.confirm');
+// LANDING PAGE SEARCH
 $landingSearch.addEventListener('keydown', async (event) => {
   const key = event.key;
   const searchInput = $landingSearch.value;
@@ -50,7 +53,7 @@ $landingSearch.addEventListener('keydown', async (event) => {
   }
   $results.textContent = `results for '${searchInput}'`;
 });
-// nav bar search
+// NAV BAR SEARCH
 $navSearch.addEventListener('keydown', async (event) => {
   const key = event.key;
   const searchInput = $navSearch.value;
@@ -85,7 +88,7 @@ $navSearch.addEventListener('keydown', async (event) => {
   }
   $results.textContent = `results for '${searchInput}'`;
 });
-// *render functions below*
+// *RENDER FUNCTIONS BELOW*
 function renderSearch(search) {
   const $listItem = document.createElement('li');
   $listItem.setAttribute('data-id', String(search.animeId));
@@ -112,64 +115,8 @@ function renderSearch(search) {
   $moreDetails.setAttribute('href', '#');
   $moreDetails.setAttribute('class', 'details text');
   $moreDetails.textContent = 'More details...';
-  $moreDetails.addEventListener('click', async (event) => {
-    while ($dataView[2].lastChild) {
-      $dataView[2].removeChild($dataView[2].lastChild);
-    }
-    const $eventTarget = event.target;
-    const $closest = $eventTarget.closest('[data-id]');
-    const animeId = $closest.getAttribute('data-id');
-    try {
-      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const individualAnime = await response.json();
-      const anime = {
-        title: individualAnime.data.title,
-        imageURL: individualAnime?.data?.images?.jpg?.image_url,
-        episodes: individualAnime.data.episodes,
-        type: individualAnime.data.type,
-        status: individualAnime.data.status,
-        aired: individualAnime.data.aired.string,
-        premiered: individualAnime.data.season,
-        rating: individualAnime.data.rating,
-        synopsis: individualAnime.data.synopsis,
-        animeId: individualAnime.data.mal_id,
-      };
-      const details = renderDetails(anime);
-      $dataView[2].appendChild(details);
-      viewSwap('details');
-    } catch (error) {
-      console.error('There was a problem with your fetch:', error);
-    }
-  });
-  $add.addEventListener('click', async (event) => {
-    const $eventTarget = event.target;
-    const $closest = $eventTarget.closest('[data-id]');
-    const animeId = $closest.getAttribute('data-id');
-    try {
-      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const individualAnime = await response.json();
-      const anime = {
-        title: individualAnime.data.title,
-        imageURL: individualAnime?.data?.images?.jpg?.image_url,
-        episodes: individualAnime.data.episodes,
-        animeId: individualAnime.data.mal_id,
-      };
-      const exists = data.watchlist.find(
-        (fav) => anime.animeId === fav.animeId,
-      );
-      if (!exists) {
-        data.watchlist.push(anime);
-        const newFavorite = renderWatchlist(anime);
-        $watchlist?.prepend(newFavorite);
-        viewSwap('watchlist');
-        noFavorites();
-      }
-    } catch (error) {
-      console.error('There was a problem with your fetch:', error);
-    }
-  });
+  $moreDetails.addEventListener('click', details);
+  $add.addEventListener('click', addToWatchlist);
   $listItem.appendChild($row);
   $row.appendChild($columnHalf1);
   $columnHalf1.appendChild($image);
@@ -223,34 +170,7 @@ function renderDetails(anime) {
   const $synopsis = document.createElement('p');
   $synopsis.setAttribute('class', 'synopsis text');
   $synopsis.textContent = String(anime.synopsis);
-  $add.addEventListener('click', async (event) => {
-    const $eventTarget = event.target;
-    const $closest = $eventTarget.closest('[data-id]');
-    const animeId = $closest.getAttribute('data-id');
-    try {
-      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const individualAnime = await response.json();
-      const anime = {
-        title: individualAnime.data.title,
-        imageURL: individualAnime?.data?.images?.jpg?.image_url,
-        episodes: individualAnime.data.episodes,
-        animeId: individualAnime.data.mal_id,
-      };
-      const exists = data.watchlist.find(
-        (fav) => anime.animeId === fav.animeId,
-      );
-      if (!exists) {
-        data.watchlist.push(anime);
-        const newFavorite = renderWatchlist(anime);
-        $watchlist?.prepend(newFavorite);
-        viewSwap('watchlist');
-        noFavorites();
-      }
-    } catch (error) {
-      console.error('There was a problem with your fetch:', error);
-    }
-  });
+  $add.addEventListener('click', addToWatchlist);
   $row.appendChild($columnThird);
   $columnThird.appendChild($image);
   $columnThird.appendChild($buttonDiv);
@@ -288,35 +208,17 @@ function renderWatchlist(entry) {
   $moreDetails.setAttribute('href', '#');
   $moreDetails.setAttribute('class', 'details text');
   $moreDetails.textContent = 'More details...';
-  $moreDetails.addEventListener('click', async (event) => {
-    while ($dataView[2].lastChild) {
-      $dataView[2].removeChild($dataView[2].lastChild);
-    }
+  $moreDetails.addEventListener('click', details);
+  const $trashDiv = document.createElement('div');
+  $trashDiv.setAttribute('class', 'trash-div');
+  const $trash = document.createElement('i');
+  $trash.setAttribute('class', 'fa-solid fa-trash-can');
+  $trash.addEventListener('click', (event) => {
+    $dialog?.showModal();
     const $eventTarget = event.target;
     const $closest = $eventTarget.closest('[data-id]');
     const animeId = $closest.getAttribute('data-id');
-    try {
-      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const individualAnime = await response.json();
-      const anime = {
-        title: individualAnime.data.title,
-        imageURL: individualAnime?.data?.images?.jpg?.image_url,
-        episodes: individualAnime.data.episodes,
-        type: individualAnime.data.type,
-        status: individualAnime.data.status,
-        aired: individualAnime.data.aired.string,
-        premiered: individualAnime.data.season,
-        rating: individualAnime.data.rating,
-        synopsis: individualAnime.data.synopsis,
-        animeId: individualAnime.data.mal_id,
-      };
-      const details = renderDetails(anime);
-      $dataView[2].appendChild(details);
-      viewSwap('details');
-    } catch (error) {
-      console.error('There was a problem with your fetch:', error);
-    }
+    $dialog?.setAttribute('data-id', String(animeId));
   });
   $listItem.appendChild($row);
   $row.appendChild($columnHalf1);
@@ -325,8 +227,69 @@ function renderWatchlist(entry) {
   $columnHalf2.appendChild($title);
   $columnHalf2.appendChild($episodes);
   $columnHalf2.appendChild($moreDetails);
+  $columnHalf2.appendChild($trashDiv);
+  $trashDiv.appendChild($trash);
   return $listItem;
 }
+// *ADD TO WATCHLIST FUNCTION*
+async function addToWatchlist(event) {
+  const $eventTarget = event.target;
+  const $closest = $eventTarget.closest('[data-id]');
+  const animeId = $closest.getAttribute('data-id');
+  try {
+    const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const individualAnime = await response.json();
+    const anime = {
+      title: individualAnime.data.title,
+      imageURL: individualAnime?.data?.images?.jpg?.image_url,
+      episodes: individualAnime.data.episodes,
+      animeId: individualAnime.data.mal_id,
+    };
+    const exists = data.watchlist.find((fav) => anime.animeId === fav.animeId);
+    if (!exists) {
+      data.watchlist.push(anime);
+      const newFavorite = renderWatchlist(anime);
+      $watchlist?.prepend(newFavorite);
+      viewSwap('watchlist');
+      noFavorites();
+    }
+  } catch (error) {
+    console.error('There was a problem with your fetch:', error);
+  }
+}
+// *DETAILS PAGE FUNCTION*
+async function details(event) {
+  while ($dataView[2].lastChild) {
+    $dataView[2].removeChild($dataView[2].lastChild);
+  }
+  const $eventTarget = event.target;
+  const $closest = $eventTarget.closest('[data-id]');
+  const animeId = $closest.getAttribute('data-id');
+  try {
+    const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const individualAnime = await response.json();
+    const anime = {
+      title: individualAnime.data.title,
+      imageURL: individualAnime?.data?.images?.jpg?.image_url,
+      episodes: individualAnime.data.episodes,
+      type: individualAnime.data.type,
+      status: individualAnime.data.status,
+      aired: individualAnime.data.aired.string,
+      premiered: individualAnime.data.season,
+      rating: individualAnime.data.rating,
+      synopsis: individualAnime.data.synopsis,
+      animeId: individualAnime.data.mal_id,
+    };
+    const details = renderDetails(anime);
+    $dataView[2].appendChild(details);
+    viewSwap('details');
+  } catch (error) {
+    console.error('There was a problem with your fetch:', error);
+  }
+}
+// *VIEW SWAPPING*
 function viewSwap(view) {
   if (view === 'landing') {
     $dataView[0].setAttribute('class', 'active');
@@ -358,6 +321,27 @@ function viewSwap(view) {
     $magnifyingGlass?.setAttribute('class', 'fa-solid fa-magnifying-glass');
   }
 }
+// *MODAL LISTENERS*
+$cancel?.addEventListener('click', () => {
+  $dialog?.close();
+});
+$confirm?.addEventListener('click', (event) => {
+  const $eventTarget = event.target;
+  const $closest = $eventTarget.closest('[data-id]');
+  const animeId = $closest.getAttribute('data-id');
+  data.watchlist = data.watchlist.filter(
+    (favorite) => String(favorite.animeId) !== animeId,
+  );
+  const $li = document.querySelectorAll('li');
+  for (let i = 0; i < $li.length; i++) {
+    if (animeId === $li[i].getAttribute('data-id')) {
+      $li[i].remove();
+    }
+  }
+  noFavorites();
+  $dialog?.close();
+});
+// *CREATES WATCHLIST*
 document.addEventListener('DOMContentLoaded', () => {
   for (let i = 0; i < data.watchlist.length; i++) {
     const $newEntry = renderWatchlist(data.watchlist[i]);
