@@ -98,3 +98,8 @@ body {
 .watchlist {
   list-style: none;
 }
+
+.fa-trash-can {
+  color: #683f3f;
+  margin-top: 1.5rem;
+}

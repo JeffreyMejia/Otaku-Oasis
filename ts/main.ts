@@ -16,6 +16,9 @@ const $bookmark = document.querySelector('.fa-bookmark');
 const $otakuOasis = document.querySelector('.otaku-oasis');
 const $watchlist = document.querySelector('.watchlist');
 if (!$watchlist) throw new Error('$watchlist query has failed');
+const $dialog = document.querySelector('dialog');
+// const $cancel = document.querySelector('.cancel');
+// const $confirm = document.querySelector('.confirm');
 
 // LANDING PAGE SEARCH
 $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
@@ -218,6 +221,13 @@ function renderWatchlist(entry: Search): HTMLLIElement {
   $moreDetails.setAttribute('class', 'details text');
   $moreDetails.textContent = 'More details...';
   $moreDetails.addEventListener('click', details);
+  const $trashDiv = document.createElement('div');
+  $trashDiv.setAttribute('class', 'trash-div');
+  const $trash = document.createElement('i');
+  $trash.setAttribute('class', 'fa-solid fa-trash-can');
+  $trash.addEventListener('click', () => {
+    $dialog?.showModal();
+  });
 
   $listItem.appendChild($row);
   $row.appendChild($columnHalf1);
@@ -226,6 +236,8 @@ function renderWatchlist(entry: Search): HTMLLIElement {
   $columnHalf2.appendChild($title);
   $columnHalf2.appendChild($episodes);
   $columnHalf2.appendChild($moreDetails);
+  $columnHalf2.appendChild($trashDiv);
+  $trashDiv.appendChild($trash);
 
   return $listItem;
 }
@@ -322,6 +334,8 @@ function viewSwap(view: string): void {
     $magnifyingGlass?.setAttribute('class', 'fa-solid fa-magnifying-glass');
   }
 }
+
+// *MODAL LISTENERS*
 
 document.addEventListener('DOMContentLoaded', () => {
   for (let i = 0; i < data.watchlist.length; i++) {
