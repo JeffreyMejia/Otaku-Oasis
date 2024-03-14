@@ -55,7 +55,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 520px;
-  background-image: url('images/oasis.jpg');
+  background-image: url('/images/oasis.jpg');
   background-repeat: no-repeat;
   border-radius: 60%;
 }

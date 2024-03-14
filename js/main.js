@@ -24,26 +24,38 @@ $landingSearch.addEventListener('keydown', async (event) => {
   const searchInput = $landingSearch.value;
   if (key === 'Enter') {
     try {
-      const response = await fetch(
+      const response1 = await fetch(
         `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=tv`,
       );
-      if (!response.ok) throw new Error('Network response was not OK');
+      const response2 = await fetch(
+        `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=movie`,
+      );
+      const response3 = await fetch(
+        `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=ova`,
+      );
+      if (!response1.ok) throw new Error('Network response was not OK');
+      if (!response2.ok) throw new Error('Network response was not OK');
+      if (!response3.ok) throw new Error('Network response was not OK');
       while ($list.firstChild) {
         $list.removeChild($list.firstChild);
       }
-      const anime = await response.json();
-      for (let i = 0; i < anime.data.length; i++) {
-        if (anime.data[i].images.jpg.image_url !== undefined) {
+      const tv = await response1.json();
+      const movie = await response2.json();
+      const ova = await response3.json();
+      const anime = [...tv.data, ...movie.data, ...ova.data];
+      for (let i = 0; i < anime.length; i++) {
+        if (anime.length > 0) {
           const search = {
-            title: anime.data[i].title,
-            imageURL: anime?.data[i]?.images?.jpg?.image_url,
-            episodes: anime.data[i].episodes,
-            animeId: anime.data[i].mal_id,
+            title: anime[i].title,
+            imageURL: anime[i]?.images?.jpg?.image_url,
+            episodes: anime[i].episodes,
+            animeId: anime[i].mal_id,
           };
           const newSearch = renderSearch(search);
           $list?.appendChild(newSearch);
         } else {
-          $noResults?.setAttribute('class', 'no-results');
+          $results.setAttribute('class', 'hidden');
+          $noResults?.setAttribute('class', 'no-results active');
         }
       }
       viewSwap('search');
@@ -59,26 +71,38 @@ $navSearch.addEventListener('keydown', async (event) => {
   const searchInput = $navSearch.value;
   if (key === 'Enter') {
     try {
-      const response = await fetch(
+      const response1 = await fetch(
         `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=tv`,
       );
-      if (!response.ok) throw new Error('Network response was not OK');
+      const response2 = await fetch(
+        `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=movie`,
+      );
+      const response3 = await fetch(
+        `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=ova`,
+      );
+      if (!response1.ok) throw new Error('Network response was not OK');
+      if (!response2.ok) throw new Error('Network response was not OK');
+      if (!response3.ok) throw new Error('Network response was not OK');
       while ($list.firstChild) {
         $list.removeChild($list.firstChild);
       }
-      const anime = await response.json();
-      for (let i = 0; i < anime.data.length; i++) {
-        if (anime.data[i].images.jpg.image_url !== undefined) {
+      const tv = await response1.json();
+      const movie = await response2.json();
+      const ova = await response3.json();
+      const anime = [...tv.data, ...movie.data, ...ova.data];
+      for (let i = 0; i < anime.length; i++) {
+        if (anime.length > 0) {
+          $results.setAttribute('class', 'hidden');
+          $noResults?.setAttribute('class', 'no-results active');
+        } else {
           const search = {
-            title: anime.data[i].title,
-            imageURL: anime?.data[i]?.images?.jpg?.image_url,
-            episodes: anime.data[i].episodes,
-            animeId: anime.data[i].mal_id,
+            title: anime[i].title,
+            imageURL: anime[i]?.images?.jpg?.image_url,
+            episodes: anime[i].episodes,
+            animeId: anime[i].mal_id,
           };
           const newSearch = renderSearch(search);
           $list?.appendChild(newSearch);
-        } else {
-          $noResults?.setAttribute('class', 'no-results');
         }
       }
       viewSwap('search');
