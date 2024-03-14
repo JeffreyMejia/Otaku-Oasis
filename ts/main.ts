@@ -164,11 +164,13 @@ function renderSearch(search: Search): HTMLLIElement {
       const exists = data.watchlist.find(
         (fav) => anime.animeId === fav.animeId,
       );
-      if (!exists) data.watchlist.push(anime);
-      const newFavorite = renderWatchlist(anime);
-      $watchlist?.prepend(newFavorite);
-      viewSwap('watchlist');
-      noFavorites();
+      if (!exists) {
+        data.watchlist.push(anime);
+        const newFavorite = renderWatchlist(anime);
+        $watchlist?.prepend(newFavorite);
+        viewSwap('watchlist');
+        noFavorites();
+      }
     } catch (error) {
       console.error('There was a problem with your fetch:', error);
     }
@@ -247,11 +249,13 @@ function renderDetails(anime: Search): HTMLDivElement {
       const exists = data.watchlist.find(
         (fav) => anime.animeId === fav.animeId,
       );
-      if (!exists) data.watchlist.push(anime);
-      const newFavorite = renderWatchlist(anime);
-      $watchlist?.prepend(newFavorite);
-      viewSwap('watchlist');
-      noFavorites();
+      if (!exists) {
+        data.watchlist.push(anime);
+        const newFavorite = renderWatchlist(anime);
+        $watchlist?.prepend(newFavorite);
+        viewSwap('watchlist');
+        noFavorites();
+      }
     } catch (error) {
       console.error('There was a problem with your fetch:', error);
     }
