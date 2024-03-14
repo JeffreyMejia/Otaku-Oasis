@@ -47,7 +47,7 @@
   align-items: start;
 }
 
-.search-column {
+.style-column {
   flex-basis: calc(100% / 2);
 }
 

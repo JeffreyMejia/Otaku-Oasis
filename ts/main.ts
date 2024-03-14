@@ -11,6 +11,11 @@ const $noResults = document.querySelector('.no-results');
 const $results = document.querySelector('.results');
 if (!$results) throw new Error('$results query has failed');
 const $magnifyingGlass = document.querySelector('.fa-magnifying-glass');
+const $noEntries = document.querySelector('.no-entries');
+const $bookmark = document.querySelector('.fa-bookmark');
+const $otakuOasis = document.querySelector('.otaku-oasis');
+const $watchlist = document.querySelector('.watchlist');
+if (!$watchlist) throw new Error('$watchlist query has failed');
 
 // landing page search
 $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
@@ -22,6 +27,9 @@ $landingSearch.addEventListener('keydown', async (event: KeyboardEvent) => {
         `https://api.jikan.moe/v4/anime?sfw&q=${searchInput}&type=tv`,
       );
       if (!response.ok) throw new Error('Network response was not OK');
+      while ($list.firstChild) {
+        $list.removeChild($list.firstChild);
+      }
       const anime = await response.json();
       for (let i = 0; i < anime.data.length; i++) {
         if (anime.data[i].images.jpg.image_url !== undefined) {
@@ -88,7 +96,7 @@ function renderSearch(search: Search): HTMLLIElement {
   const $row = document.createElement('div');
   $row.setAttribute('class', 'row search-row');
   const $columnHalf1 = document.createElement('div');
-  $columnHalf1.setAttribute('class', 'column-half search-column image-column');
+  $columnHalf1.setAttribute('class', 'column-half style-column image-column');
   const $image = document.createElement('img');
   $image.setAttribute('src', search.imageURL);
   const $buttonDiv = document.createElement('div');
@@ -97,7 +105,7 @@ function renderSearch(search: Search): HTMLLIElement {
   $add.setAttribute('class', 'add-button');
   $add.textContent = 'Add to watchlist';
   const $columnHalf2 = document.createElement('div');
-  $columnHalf2.setAttribute('class', 'column-half search-column text-column');
+  $columnHalf2.setAttribute('class', 'column-half style-column text-column');
   const $title = document.createElement('h2');
   $title.setAttribute('class', 'title text');
   $title.textContent = search.title;
@@ -156,7 +164,13 @@ function renderSearch(search: Search): HTMLLIElement {
       const exists = data.watchlist.find(
         (fav) => anime.animeId === fav.animeId,
       );
-      if (!exists) data.watchlist.push(anime);
+      if (!exists) {
+        data.watchlist.push(anime);
+        const newFavorite = renderWatchlist(anime);
+        $watchlist?.prepend(newFavorite);
+        viewSwap('watchlist');
+        noFavorites();
+      }
     } catch (error) {
       console.error('There was a problem with your fetch:', error);
     }
@@ -235,7 +249,13 @@ function renderDetails(anime: Search): HTMLDivElement {
       const exists = data.watchlist.find(
         (fav) => anime.animeId === fav.animeId,
       );
-      if (!exists) data.watchlist.push(anime);
+      if (!exists) {
+        data.watchlist.push(anime);
+        const newFavorite = renderWatchlist(anime);
+        $watchlist?.prepend(newFavorite);
+        viewSwap('watchlist');
+        noFavorites();
+      }
     } catch (error) {
       console.error('There was a problem with your fetch:', error);
     }
@@ -259,11 +279,75 @@ function renderDetails(anime: Search): HTMLDivElement {
   return $row;
 }
 
+function renderWatchlist(entry: Search): HTMLLIElement {
+  const $listItem = document.createElement('li');
+  $listItem.setAttribute('data-id', String(entry.animeId));
+  const $row = document.createElement('div');
+  $row.setAttribute('class', 'row search-row');
+  const $columnHalf1 = document.createElement('div');
+  $columnHalf1.setAttribute('class', 'column-half style-column image-column');
+  const $image = document.createElement('img');
+  $image.setAttribute('src', entry.imageURL);
+  const $columnHalf2 = document.createElement('div');
+  $columnHalf2.setAttribute('class', 'column-half style-column text-column');
+  const $title = document.createElement('h2');
+  $title.setAttribute('class', 'title text');
+  $title.textContent = entry.title;
+  const $episodes = document.createElement('h3');
+  $episodes.setAttribute('class', 'episodes text');
+  $episodes.textContent = `Eps ${entry.episodes}`;
+  const $moreDetails = document.createElement('a');
+  $moreDetails.setAttribute('href', '#');
+  $moreDetails.setAttribute('class', 'details text');
+  $moreDetails.textContent = 'More details...';
+  $moreDetails.addEventListener('click', async (event: Event) => {
+    while ($dataView[2].lastChild) {
+      $dataView[2].removeChild($dataView[2].lastChild);
+    }
+    const $eventTarget = event.target as HTMLElement;
+    const $closest = $eventTarget.closest('[data-id]') as HTMLAnchorElement;
+    const animeId = $closest.getAttribute('data-id');
+    try {
+      const response = await fetch(`https://api.jikan.moe/v4/anime/${animeId}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const individualAnime = await response.json();
+      const anime = {
+        title: individualAnime.data.title,
+        imageURL: individualAnime?.data?.images?.jpg?.image_url,
+        episodes: individualAnime.data.episodes,
+        type: individualAnime.data.type,
+        status: individualAnime.data.status,
+        aired: individualAnime.data.aired.string,
+        premiered: individualAnime.data.season,
+        rating: individualAnime.data.rating,
+        synopsis: individualAnime.data.synopsis,
+        animeId: individualAnime.data.mal_id,
+      };
+      const details = renderDetails(anime);
+      $dataView[2].appendChild(details);
+      viewSwap('details');
+    } catch (error) {
+      console.error('There was a problem with your fetch:', error);
+    }
+  });
+
+  $listItem.appendChild($row);
+  $row.appendChild($columnHalf1);
+  $columnHalf1.appendChild($image);
+  $row.appendChild($columnHalf2);
+  $columnHalf2.appendChild($title);
+  $columnHalf2.appendChild($episodes);
+  $columnHalf2.appendChild($moreDetails);
+
+  return $listItem;
+}
+
 function viewSwap(view: string): void {
   if (view === 'landing') {
     $dataView[0].setAttribute('class', 'active');
     $dataView[1].setAttribute('class', 'hidden');
     $dataView[2].setAttribute('class', 'hidden');
+    $dataView[3].setAttribute('class', 'watchlist-view hidden');
     $navSearch?.setAttribute('class', 'nav-search hidden');
     $magnifyingGlass?.setAttribute('class', 'hidden');
   } else if (view === 'search') {
@@ -271,12 +355,52 @@ function viewSwap(view: string): void {
     $dataView[1].setAttribute('class', 'active');
     $dataView[2].setAttribute('class', 'hidden');
     $navSearch?.setAttribute('class', 'nav-search');
+    $dataView[3].setAttribute('class', 'watchlist-view hidden');
     $magnifyingGlass?.setAttribute('class', 'fa-solid fa-magnifying-glass');
   } else if (view === 'details') {
     $dataView[0].setAttribute('class', 'hidden');
     $dataView[1].setAttribute('class', 'hidden');
     $dataView[2].setAttribute('class', 'active');
+    $dataView[3].setAttribute('class', 'watchlist-view hidden');
+    $navSearch?.setAttribute('class', 'nav-search');
+    $magnifyingGlass?.setAttribute('class', 'fa-solid fa-magnifying-glass');
+  } else if (view === 'watchlist') {
+    $dataView[0].setAttribute('class', 'hidden');
+    $dataView[1].setAttribute('class', 'hidden');
+    $dataView[2].setAttribute('class', 'hidden');
+    $dataView[3].setAttribute('class', 'watchlist-view active');
     $navSearch?.setAttribute('class', 'nav-search');
     $magnifyingGlass?.setAttribute('class', 'fa-solid fa-magnifying-glass');
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  for (let i = 0; i < data.watchlist.length; i++) {
+    const $newEntry = renderWatchlist(data.watchlist[i]);
+    $watchlist.prepend($newEntry);
+  }
+  noFavorites();
+});
+
+function noFavorites(): void {
+  if (data.watchlist.length > 0) {
+    $noEntries?.setAttribute('class', 'hidden');
+  } else {
+    $noEntries?.setAttribute('class', 'no-entries text active');
+  }
+}
+
+$bookmark?.addEventListener('click', (event: Event) => {
+  const $eventTarget = event.target;
+  if ($eventTarget === $bookmark) {
+    viewSwap('watchlist');
+    noFavorites();
+  }
+});
+
+$otakuOasis?.addEventListener('click', (event: Event) => {
+  const $eventTarget = event.target;
+  if ($eventTarget === $otakuOasis) {
+    viewSwap('landing');
+  }
+});

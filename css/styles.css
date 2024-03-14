@@ -10,6 +10,7 @@ body {
   padding-left: 1rem;
   font-family: sriracha, cursive;
   text-shadow: #d7cdce 1px 2px;
+  cursor: pointer;
 }
 
 .nav-search {
@@ -20,6 +21,12 @@ body {
 
 .fa-solid fa-magnifying-glass {
   color: black;
+}
+
+.fa-bookmark {
+  color: #ba9779;
+  margin-right: 1.5rem;
+  cursor: pointer;
 }
 
 .welcome {
@@ -86,4 +93,8 @@ body {
   border-style: none;
   height: 2rem;
   cursor: pointer;
+}
+
+.watchlist {
+  list-style: none;
 }

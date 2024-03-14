@@ -27,6 +27,7 @@
           <h1 class="otaku-oasis">Otaku Oasis</h1>
         </div>
         <div class="column-half align-right">
+          <div><i class="fa-solid fa-bookmark"></i></div>
           <input class="nav-search hidden" type="text" />
           <i class="fa-solid fa-magnifying-glass hidden"></i>
         </div>
@@ -55,11 +56,21 @@
           <h2 class="no-results hidden">
             Sorry, your search did not turn up any results
           </h2>
-          <h2 class="results">results for 'orange'</h2>
+          <h2 class="results">results for ''</h2>
         </div>
         <ul class="search-results"></ul>
       </div>
-      <div data-view="details" id="what" class="individual-anime hidden"></div>
+      <div
+        data-view="details"
+        id="individual-anime"
+        class="individual-anime hidden"></div>
+      <div data-view="watchlist" class="watchlist-view hidden">
+        <div class="column-half">
+          <h2 class="your-watchlist text">Your Watchlist</h2>
+          <h3 class="no-entries text hidden">No entries...yet</h3>
+        </div>
+        <ul class="watchlist"></ul>
+      </div>
     </main>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
