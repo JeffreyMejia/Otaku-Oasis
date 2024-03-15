@@ -19,8 +19,9 @@ body {
   border-radius: 5%;
 }
 
-.fa-solid fa-magnifying-glass {
+.fa-magnifying-glass {
   color: black;
+  margin-left: 0.3rem;
 }
 
 .fa-bookmark {
