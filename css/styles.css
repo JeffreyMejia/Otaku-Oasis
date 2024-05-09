@@ -19,8 +19,9 @@ body {
   border-radius: 5%;
 }
 
-.fa-solid fa-magnifying-glass {
+.fa-magnifying-glass {
   color: black;
+  margin-left: 0.3rem;
 }
 
 .fa-bookmark {
@@ -55,7 +56,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 520px;
-  background-image: url('images/oasis.jpg');
+  background-image: url('/images/oasis.jpg');
   background-repeat: no-repeat;
   border-radius: 60%;
 }
